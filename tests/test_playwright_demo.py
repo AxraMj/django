@@ -8,3 +8,5 @@ with sync_playwright() as p:
     print("Page title:", title)
     print("TEST PASSED!")
     browser.close()
+
+    
