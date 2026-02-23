@@ -13,7 +13,7 @@ from django.test.selenium import SeleniumTestCase
 class I18nPlaywrightTests(SeleniumTestCase):
     """
     Playwright version of I18nSeleniumTests.
-    
+
     Original class uses:  self.selenium.get(), find_element(By.ID, ...)
     Playwright uses:      self.page.goto(), self.page.locator("#id")
     """
@@ -28,44 +28,55 @@ class I18nPlaywrightTests(SeleniumTestCase):
     @override_settings(LANGUAGE_CODE="de")
     def test_javascript_gettext(self):
         """
-        ORIGINAL SELENIUM CODE:
-        self.selenium.get(self.live_server_url + "/jsi18n_template/")
-        elem = self.selenium.find_element(By.ID, "gettext")
-        self.assertEqual(elem.text, "Entfernen")
+        Playwright version of I18nSeleniumTests.test_javascript_gettext
 
-        PLAYWRIGHT EQUIVALENT BELOW:
+        Original Selenium:
+            self.selenium.get(url + "/jsi18n_template/")
+            elem = self.selenium.find_element(By.ID, "gettext")
+            self.assertEqual(elem.text, "Entfernen")
+
+        Playwright equivalent below:
         """
-        # Step 1: Navigate to page
+        # Navigate to page
         # Selenium: self.selenium.get(url)
         # Playwright: self.page.goto(url)
         self.page.goto(self.live_server_url + "/jsi18n_template/")
 
-        # Step 2: Find element and check text
-        # Selenium: find_element(By.ID, "gettext").text
-        # Playwright: locator("#gettext").text_content()
+        # Find elements and check text
+        # Selenium: find_element(By.ID, "x").text
+        # Playwright: locator("#x").text_content()
         self.assertEqual(
             self.page.locator("#gettext").text_content(),
-            "Entfernen"
+            "Entfernen",
         )
         self.assertEqual(
             self.page.locator("#ngettext_sing").text_content(),
-            "1 Element"
+            "1 Element",
         )
         self.assertEqual(
             self.page.locator("#ngettext_plur").text_content(),
-            "455 Elemente"
+            "455 Elemente",
+        )
+        self.assertEqual(
+            self.page.locator("#ngettext_onnonplural").text_content(),
+            "Bild",
         )
         self.assertEqual(
             self.page.locator("#pgettext").text_content(),
-            "Kann"
+            "Kann",
         )
         self.assertEqual(
             self.page.locator("#npgettext_sing").text_content(),
-            "1 Resultat"
+            "1 Resultat",
         )
         self.assertEqual(
             self.page.locator("#npgettext_plur").text_content(),
-            "455 Resultate"
+            "455 Resultate",
+        )
+        self.assertEqual(
+            self.page.locator("#formats").text_content(),
+            "DATE_INPUT_FORMATS is an object; DECIMAL_SEPARATOR is a string; "
+            "FIRST_DAY_OF_WEEK is a number;",
         )
 
     @modify_settings(
@@ -74,12 +85,14 @@ class I18nPlaywrightTests(SeleniumTestCase):
     @override_settings(LANGUAGE_CODE="fr")
     def test_multiple_catalogs(self):
         """
-        ORIGINAL SELENIUM CODE:
-        self.selenium.get(self.live_server_url + "/jsi18n_multi_catalogs/")
-        elem = self.selenium.find_element(By.ID, "app1string")
-        self.assertEqual(elem.text, "il faut traduire...")
+        Playwright version of I18nSeleniumTests.test_multiple_catalogs
 
-        PLAYWRIGHT EQUIVALENT BELOW:
+        Original Selenium:
+            self.selenium.get(url + "/jsi18n_multi_catalogs/")
+            elem = self.selenium.find_element(By.ID, "app1string")
+            self.assertEqual(elem.text, "il faut traduire...")
+
+        Playwright equivalent below:
         """
         self.page.goto(self.live_server_url + "/jsi18n_multi_catalogs/")
 
